@@ -1,16 +1,14 @@
 "use strict";
 
-// document.querySelector(".message").textContent = "Correct Number!";
-
-// document.querySelector(".number").textContent = 13;
-// document.querySelector(".score").textContent = 13;
-
-// console.log(document.querySelector(".guess").value)
-
 let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let score = 20;
 let highScore = 0;
-// document.querySelector(".number").textContent = secretNumber;
+
+let scoreText = document.querySelector(".score");
+
+const displayMessage = function (message) {
+  document.querySelector(".message").textContent = message;
+};
 
 document.querySelector(".again").addEventListener("click", function () {
   // Resetting everything by reloading the page
@@ -19,12 +17,13 @@ document.querySelector(".again").addEventListener("click", function () {
   // Without reloading the page
   secretNumber = Math.trunc(Math.random() * 20) + 1;
   score = 20;
-  document.querySelector(".score").textContent = score;
-  document.querySelector(".message").textContent = "Start guessing...";
-  document.querySelector("body").style.backgroundColor = "#222";
-  document.querySelector(".number").style.width = "15rem";
+  scoreText.textContent = score;
+  displayMessage("Start guessing...");
   document.querySelector(".number").textContent = "?";
   document.querySelector(".guess").value = "";
+
+  document.querySelector("body").style.backgroundColor = "#222";
+  document.querySelector(".number").style.width = "15rem";
   // Doing it this way lets us preserve our high score
 });
 
@@ -33,11 +32,11 @@ document.querySelector(".check").addEventListener("click", function () {
 
   // No guess
   if (!guess) {
-    document.querySelector(".message").textContent = "No Number!";
+    displayMessage("No Guess!");
 
     // When player wins
   } else if (guess === secretNumber) {
-    document.querySelector(".message").textContent = "Correct Number!";
+    displayMessage("Correct Number!");
     document.querySelector(".number").textContent = secretNumber;
 
     document.querySelector("body").style.backgroundColor = "#60B347";
@@ -50,25 +49,15 @@ document.querySelector(".check").addEventListener("click", function () {
     document.querySelector(".highscore").textContent = highScore;
 
     // Guess too high
-  } else if (guess > secretNumber) {
+  } else {
     if (score > 1) {
-      document.querySelector(".message").textContent = "Too High!";
-      score--;
-      document.querySelector(".score").textContent = score;
-    } else {
-      document.querySelector(".message").textContent = "You Lost!";
-      document.querySelector(".score").textContent = 0;
-    }
+      displayMessage(guess > secretNumber ? "Too High!" : "Too low!");
 
-    // Guess too low
-  } else if (guess < secretNumber) {
-    if (score > 1) {
-      document.querySelector(".message").textContent = "Too Low!";
       score--;
-      document.querySelector(".score").textContent = score;
+      scoreText.textContent = score;
     } else {
-      document.querySelector(".message").textContent = "You Lost!";
-      document.querySelector(".score").textContent = 0;
+      displayMessage("You Lost!");
+      scoreText.textContent = 0;
     }
   }
 });
